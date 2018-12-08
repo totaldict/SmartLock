@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLock", "SmartLock\SmartLock.csproj", "{EAE8CC47-CF10-4287-9006-CB95276AA105}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UISmartLock", "UISmartLock\UISmartLock.csproj", "{C6FE24B6-6B89-4477-BB41-EFE8620DAA32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UISmartLock", "UISmartLock\UISmartLock.csproj", "{2E65DFC5-1B6E-41EF-ABF3-92DDEC78B15D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{EAE8CC47-CF10-4287-9006-CB95276AA105}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAE8CC47-CF10-4287-9006-CB95276AA105}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAE8CC47-CF10-4287-9006-CB95276AA105}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C6FE24B6-6B89-4477-BB41-EFE8620DAA32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C6FE24B6-6B89-4477-BB41-EFE8620DAA32}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C6FE24B6-6B89-4477-BB41-EFE8620DAA32}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C6FE24B6-6B89-4477-BB41-EFE8620DAA32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E65DFC5-1B6E-41EF-ABF3-92DDEC78B15D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E65DFC5-1B6E-41EF-ABF3-92DDEC78B15D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E65DFC5-1B6E-41EF-ABF3-92DDEC78B15D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E65DFC5-1B6E-41EF-ABF3-92DDEC78B15D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

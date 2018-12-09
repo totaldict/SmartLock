@@ -29,38 +29,50 @@
         private void InitializeComponent()
         {
             this.PicBox = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnChkKey = new System.Windows.Forms.Button();
+            this.btnClr = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PicBox)).BeginInit();
             this.SuspendLayout();
             // 
             // PicBox
             // 
             this.PicBox.BackColor = System.Drawing.Color.White;
-            this.PicBox.Location = new System.Drawing.Point(0, -1);
+            this.PicBox.Location = new System.Drawing.Point(0, 0);
             this.PicBox.Name = "PicBox";
-            this.PicBox.Size = new System.Drawing.Size(285, 223);
+            this.PicBox.Size = new System.Drawing.Size(300, 250);
             this.PicBox.TabIndex = 0;
             this.PicBox.TabStop = false;
             this.PicBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PicBox_MouseDown);
             this.PicBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.PicBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.PicBox_MouseUp);
             // 
-            // button1
+            // btnChkKey
             // 
-            this.button1.Location = new System.Drawing.Point(21, 227);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Check Key";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnChkKey.Location = new System.Drawing.Point(12, 254);
+            this.btnChkKey.Name = "btnChkKey";
+            this.btnChkKey.Size = new System.Drawing.Size(75, 23);
+            this.btnChkKey.TabIndex = 1;
+            this.btnChkKey.Text = "Check Key";
+            this.btnChkKey.UseVisualStyleBackColor = true;
+            this.btnChkKey.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnClr
+            // 
+            this.btnClr.Location = new System.Drawing.Point(12, 278);
+            this.btnClr.Name = "btnClr";
+            this.btnClr.Size = new System.Drawing.Size(75, 23);
+            this.btnClr.TabIndex = 2;
+            this.btnClr.Text = "Clear";
+            this.btnClr.UseVisualStyleBackColor = true;
+            this.btnClr.Click += new System.EventHandler(this.btnClr_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(300, 304);
+            this.Controls.Add(this.btnClr);
+            this.Controls.Add(this.btnChkKey);
             this.Controls.Add(this.PicBox);
             this.Name = "Form1";
             this.Text = "SmartLock";
@@ -72,7 +84,8 @@
         #endregion
 
         private System.Windows.Forms.PictureBox PicBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnChkKey;
+        private System.Windows.Forms.Button btnClr;
     }
 }
 

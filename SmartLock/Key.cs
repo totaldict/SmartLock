@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SmartLock
 {
-    internal abstract class Key
+    public abstract class Key
     {
         DateTime date;
         object pic;

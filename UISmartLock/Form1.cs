@@ -35,6 +35,77 @@ namespace UISmartLock
             var g = Graphics.FromImage(bm);
             g.Clear(Color.White);
         }
+        /// <summary>
+        /// Сохранение BMP
+        /// </summary>
+        /// <param name="o">Рисунок, объект Bitmap</param>
+        /// <param name="p">Папка сохранения</param>
+        void SaveBmp(Bitmap o, string p)
+        {
+            string date = DateTime.Now.ToString().Replace(".", "").Replace(":", "").Replace(" ", "");
+            string path = $@"{p}{date}.bmp";
+            o.Save(path, System.Drawing.Imaging.ImageFormat.Bmp);
+        }
+        /// <summary>
+        /// Переводит рисунок в матрицу
+        /// </summary>
+        /// <param name="b">Рисунок Bitmap</param>
+        /// <returns></returns>
+        private bool[,] BmpToMatrix(Bitmap b)
+        {
+            // Считываем в массив заполненных пикселей (медленно), в след. итерации попробовать Bitmap.LockBits 
+            bool[,] pixels = new bool[b.Width, b.Height];
+            for (int i = 0; i < b.Width; ++i)
+            {
+                for (int j = 0; j < b.Height; ++j)
+                {
+                    if (b.GetPixel(i, j).Name == "ff000000")
+                        pixels[i, j] = true;
+                    else
+                        pixels[i, j] = false;
+                }
+            }
+            //создаём массив для сверки
+            bool[,] arrFilled = new bool[10, 10];//матрица со значениями bool, нарисовано ли в каждом квадрате 30*25
+            int[,] summFilled = new int[10, 10];//матрица количества закрашеных пикселей в каждом квадрате 30*25
+            int summ = 0;
+            for (int i = 0; i < b.Width / 30; i++)     //НА СЛЕД.ИТЕРАЦИИ СДЕЛАТЬ параметр регулировки шага сетки
+            {
+                for (int j = 0; j < b.Height / 25; j++)
+                {
+                    for (int k = i * 30; k < (i + 1) * 30; k++)
+                    {
+                        for (int h = j * 25; h < (j + 1) * 25; h++)
+                        {
+                            if (pixels[k, h] == true) summ++;
+                        }
+                    }
+                    summFilled[i, j] = summ;
+                    summ = 0;
+                }
+            }
+            for (int i = 0; i < 10; i++)        //отпечаток ключа, ячейки bool
+                for (int j = 0; j < 10; j++)
+                {
+                    if (summFilled[i, j] > 50)      //тут параметр закрашенности ячейки. если больше его - ячейка закрашена
+                        arrFilled[i, j] = true;
+                    else
+                        arrFilled[i, j] = false;
+                }
+
+            for (int i = 0; i < 10; i++)        //ОТЛАДКА, можно добавить в админское меню
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    if (arrFilled[j, i] == true)
+                        rsltBox.Text += "*  ";
+                    else
+                        rsltBox.Text += "   ";
+                }
+                rsltBox.Text += Environment.NewLine;
+            }
+            return arrFilled;
+        }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
@@ -68,23 +139,17 @@ namespace UISmartLock
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {       //сохраняем рисунок ключа
-            string date = DateTime.Now.ToString().Replace(".", "").Replace(":","").Replace(" ","");
-            string path =$@"D:\TestKey\test{date}.bmp";
-            PicBox.Image.Save(path, System.Drawing.Imaging.ImageFormat.Bmp);
-            
-            // Считываем в массив цветов (медленно), в след. итерации попробовать Bitmap.LockBits 
-            bool[,] pixels = new bool[bm2.Width, bm2.Height];
-            for (int i = 0; i < bm2.Width; ++i)
+        {
+            try
             {
-                for (int j = 0; j < bm2.Height; ++j)
-                {
-                    if (bm2.GetPixel(i, j).Name == "ff000000")
-                        pixels[i, j] = true;
-                    else
-                        pixels[i, j] = false;
-                }
+                SaveBmp(bm2, @"D:\TestKey\test");//сохраняем рисунок ключа
+                bool[,] arrFilled = BmpToMatrix(bm2);//переводим в вид матрицы
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
 
         private void btnClr_Click(object sender, EventArgs e)

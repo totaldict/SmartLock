@@ -31,6 +31,8 @@
             this.PicBox = new System.Windows.Forms.PictureBox();
             this.btnChkKey = new System.Windows.Forms.Button();
             this.btnClr = new System.Windows.Forms.Button();
+            this.rsltBox = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PicBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -48,7 +50,7 @@
             // 
             // btnChkKey
             // 
-            this.btnChkKey.Location = new System.Drawing.Point(12, 254);
+            this.btnChkKey.Location = new System.Drawing.Point(144, 254);
             this.btnChkKey.Name = "btnChkKey";
             this.btnChkKey.Size = new System.Drawing.Size(75, 23);
             this.btnChkKey.TabIndex = 1;
@@ -58,7 +60,7 @@
             // 
             // btnClr
             // 
-            this.btnClr.Location = new System.Drawing.Point(12, 278);
+            this.btnClr.Location = new System.Drawing.Point(225, 254);
             this.btnClr.Name = "btnClr";
             this.btnClr.Size = new System.Drawing.Size(75, 23);
             this.btnClr.TabIndex = 2;
@@ -66,11 +68,30 @@
             this.btnClr.UseVisualStyleBackColor = true;
             this.btnClr.Click += new System.EventHandler(this.btnClr_Click);
             // 
+            // rsltBox
+            // 
+            this.rsltBox.Location = new System.Drawing.Point(384, 0);
+            this.rsltBox.Multiline = true;
+            this.rsltBox.Name = "rsltBox";
+            this.rsltBox.Size = new System.Drawing.Size(283, 254);
+            this.rsltBox.TabIndex = 3;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 256);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 46);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Save Fixed Key";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(300, 304);
+            this.ClientSize = new System.Drawing.Size(748, 314);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.rsltBox);
             this.Controls.Add(this.btnClr);
             this.Controls.Add(this.btnChkKey);
             this.Controls.Add(this.PicBox);
@@ -78,6 +99,7 @@
             this.Text = "SmartLock";
             ((System.ComponentModel.ISupportInitialize)(this.PicBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -86,6 +108,8 @@
         private System.Windows.Forms.PictureBox PicBox;
         private System.Windows.Forms.Button btnChkKey;
         private System.Windows.Forms.Button btnClr;
+        private System.Windows.Forms.TextBox rsltBox;
+        private System.Windows.Forms.Button button1;
     }
 }
 

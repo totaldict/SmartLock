@@ -8,7 +8,7 @@ namespace SmartLock
 {/// <summary>
 /// Класс тестового ключа
 /// </summary>
-    class TestKey:Key
+    public class TestKey:Key
     {
         TestKey() : base()
         {
@@ -16,6 +16,9 @@ namespace SmartLock
         TestKey(DateTime d, object p, string v) : base(d, p, v)
         {
         }
+        //public TestKey MakeTestKey()
+        //{
 
+        //}
     }
 }

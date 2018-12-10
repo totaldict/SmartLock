@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SmartLock;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace UISmartLock
 {
@@ -25,6 +26,8 @@ namespace UISmartLock
         {
             InitializeComponent();
             NewPic();
+            //устанавливаем путь по умолчанию
+            SaveTBox.Text= System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\TestKey";
         }
         private void NewPic()
         {
@@ -90,8 +93,19 @@ namespace UISmartLock
 
         private void SavePathBtn_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog1.ShowDialog();
-            SaveTBox.Text = folderBrowserDialog1.SelectedPath;
+            try
+            {
+                folderBrowserDialog1.ShowDialog();
+                SaveTBox.Text = folderBrowserDialog1.SelectedPath;
+                using (StreamWriter sw = new StreamWriter($@"{SaveTBox.Text}\data.ini", false, System.Text.Encoding.Default))
+                {
+                    sw.WriteLine(SaveTBox.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         //     for (int i = 0; i< 10; i++)        //ОТЛАДКА, можно добавить в админское меню

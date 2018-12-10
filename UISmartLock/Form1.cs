@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SmartLock;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace UISmartLock
 {
@@ -18,12 +19,18 @@ namespace UISmartLock
         private bool drawing = false;
         Bitmap bm;
         Bitmap bm2;
-        
-        public Form1()
+        public string dir;
+
+public Form1()
         {            
             InitializeComponent();
             NewPic();
+            //узнаём где находимся, проверяем есть ли папка, если нет - создаём
+            dir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+@"\TestKey";  
+            System.IO.Directory.CreateDirectory(dir);
             
+
+
         }
         /// <summary>
         /// Очищает поле изображения ключа
@@ -134,11 +141,11 @@ namespace UISmartLock
             List<FixedKey> fix = new List<FixedKey>();
             try
             {
-                SaveBmp(bm2, @"D:\TestKey\test");//сохраняем рисунок ключа
+                SaveBmp(bm2, $@"{dir}\test");//сохраняем рисунок ключа
                 bool[,] arrFilled = BmpToMatrix(bm2);//переводим в вид матрицы
                 TestKey newKey = new TestKey(DateTime.Now, arrFilled);
                 //чтение списка эталонных ключей
-                System.IO.FileStream fs = new System.IO.FileStream(@"D:\TestKey\collection.ini", System.IO.FileMode.Open);
+                System.IO.FileStream fs = new System.IO.FileStream($@"{dir}\collection.ini", System.IO.FileMode.Open);
                 BinaryFormatter bf = new BinaryFormatter();
                 fix.Clear();//очищаем коллекцию перед записью из файла
                 do

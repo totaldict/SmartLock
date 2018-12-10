@@ -60,7 +60,7 @@
             // 
             // btnClr
             // 
-            this.btnClr.Location = new System.Drawing.Point(225, 254);
+            this.btnClr.Location = new System.Drawing.Point(144, 279);
             this.btnClr.Name = "btnClr";
             this.btnClr.Size = new System.Drawing.Size(75, 23);
             this.btnClr.TabIndex = 2;
@@ -84,6 +84,7 @@
             this.button1.TabIndex = 4;
             this.button1.Text = "Save Fixed Key";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // Form1
             // 

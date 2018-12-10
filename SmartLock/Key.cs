@@ -9,20 +9,19 @@ namespace SmartLock
     public abstract class Key
     {
         DateTime date;
-        object pic;
-        string vector;
+        //object pic;
+        public bool [,] matrix;
 
         internal Key()
         {
             date = new DateTime();
-            pic = null;
-            vector = null;
+            //pic = null;
+            matrix = null;
         }
-        internal Key(DateTime d, object p, string v)
+        internal Key(DateTime d, bool[,] m)
         {
             date = d;
-            pic = p;
-            vector = v;
+            matrix = m;
         }
 
     }

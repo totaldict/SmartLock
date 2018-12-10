@@ -8,14 +8,15 @@ namespace SmartLock
 {/// <summary>
 /// Класс эталонного ключа
 /// </summary>
-    internal class FixedKey:Key
+    public class FixedKey:Key
     {
         FixedKey() : base()
         {
         }
-        FixedKey(DateTime d, object p, string v) : base(d, p, v)
+        public FixedKey(DateTime d, bool[,] m) : base(d, m)
         {
+            
         }
-
+        
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SmartLock;
 
 namespace UISmartLock
 {
@@ -18,11 +19,15 @@ namespace UISmartLock
         private bool drawing = false;
         Bitmap bm;
         Bitmap bm2;
+        public FixedKey fix;       //пока тут создаём обьект эталонного ключа
+
         public Form1()
         {            
             InitializeComponent();
             NewPic();
-           
+            
+
+
         }
         /// <summary>
         /// Очищает поле изображения ключа
@@ -138,12 +143,16 @@ namespace UISmartLock
             PicBox.Invalidate();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)  //проверка ключа
         {
             try
             {
                 SaveBmp(bm2, @"D:\TestKey\test");//сохраняем рисунок ключа
                 bool[,] arrFilled = BmpToMatrix(bm2);//переводим в вид матрицы
+                TestKey newKey = new TestKey(DateTime.Now, arrFilled);
+                bool ck = newKey.CheckTestKey(newKey.matrix, fix.matrix);
+                if (ck) MessageBox.Show("Совпадают!");
+                else MessageBox.Show("Не совпадают!");
             }
             catch (Exception ex)
             {
@@ -155,6 +164,20 @@ namespace UISmartLock
         private void btnClr_Click(object sender, EventArgs e)
         {
             NewPic();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                SaveBmp(bm2, @"D:\TestKey\fixed");//сохраняем рисунок ключа
+                bool[,] arrFilled = BmpToMatrix(bm2);//переводим в вид матрицы
+                fix = new FixedKey(DateTime.Now, arrFilled); 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

@@ -8,26 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SmartLock;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace UISmartLock
 {
     public partial class Form1 : Form
     {
-        
-
         private Point start;
         private bool drawing = false;
         Bitmap bm;
         Bitmap bm2;
-        public FixedKey fix;       //пока тут создаём обьект эталонного ключа
-
+        
         public Form1()
         {            
             InitializeComponent();
             NewPic();
             
-
-
         }
         /// <summary>
         /// Очищает поле изображения ключа
@@ -39,13 +35,14 @@ namespace UISmartLock
             bm2 = new Bitmap(PicBox.Width, PicBox.Height);
             var g = Graphics.FromImage(bm);
             g.Clear(Color.White);
+            textBox1.Text = null;
         }
         /// <summary>
         /// Сохранение BMP
         /// </summary>
         /// <param name="o">Рисунок, объект Bitmap</param>
         /// <param name="p">Папка сохранения</param>
-        void SaveBmp(Bitmap o, string p)
+        public static void SaveBmp(Bitmap o, string p)
         {
             string date = DateTime.Now.ToString().Replace(".", "").Replace(":", "").Replace(" ", "");
             string path = $@"{p}{date}.bmp";
@@ -56,7 +53,7 @@ namespace UISmartLock
         /// </summary>
         /// <param name="b">Рисунок Bitmap</param>
         /// <returns></returns>
-        private bool[,] BmpToMatrix(Bitmap b)
+        public static bool[,] BmpToMatrix(Bitmap b)
         {
             // Считываем в массив заполненных пикселей (медленно), в след. итерации попробовать Bitmap.LockBits 
             bool[,] pixels = new bool[b.Width, b.Height];
@@ -97,18 +94,7 @@ namespace UISmartLock
                     else
                         arrFilled[i, j] = false;
                 }
-
-            for (int i = 0; i < 10; i++)        //ОТЛАДКА, можно добавить в админское меню
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    if (arrFilled[j, i] == true)
-                        rsltBox.Text += "*  ";
-                    else
-                        rsltBox.Text += "   ";
-                }
-                rsltBox.Text += Environment.NewLine;
-            }
+            
             return arrFilled;
         }
 
@@ -145,14 +131,29 @@ namespace UISmartLock
 
         private void button1_Click(object sender, EventArgs e)  //проверка ключа
         {
+            List<FixedKey> fix = new List<FixedKey>();
             try
             {
                 SaveBmp(bm2, @"D:\TestKey\test");//сохраняем рисунок ключа
                 bool[,] arrFilled = BmpToMatrix(bm2);//переводим в вид матрицы
                 TestKey newKey = new TestKey(DateTime.Now, arrFilled);
-                bool ck = newKey.CheckTestKey(newKey.matrix, fix.matrix);
-                if (ck) MessageBox.Show("Совпадают!");
-                else MessageBox.Show("Не совпадают!");
+                //чтение списка эталонных ключей
+                System.IO.FileStream fs = new System.IO.FileStream(@"D:\TestKey\collection.ini", System.IO.FileMode.Open);
+                BinaryFormatter bf = new BinaryFormatter();
+                fix.Clear();//очищаем коллекцию перед записью из файла
+                do
+                {
+                    fix.Add((FixedKey)bf.Deserialize(fs));
+                } while (fs.Position < fs.Length);
+                fs.Close();
+                int i = 1;
+                foreach (FixedKey f in fix)
+                {
+                    int ck = newKey.CheckTestKey(newKey.matrix, f.matrix);
+                    textBox1.Text += $"{i}) {ck}%" + Environment.NewLine;
+                    i++;
+                }
+               // NewPic();   //очистка поля после проверки
             }
             catch (Exception ex)
             {
@@ -166,18 +167,13 @@ namespace UISmartLock
             NewPic();
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+
+        private void authToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
-            {
-                SaveBmp(bm2, @"D:\TestKey\fixed");//сохраняем рисунок ключа
-                bool[,] arrFilled = BmpToMatrix(bm2);//переводим в вид матрицы
-                fix = new FixedKey(DateTime.Now, arrFilled); 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            Form2 frm2 = new Form2();
+            frm2.Show();
         }
+
+        
     }
 }

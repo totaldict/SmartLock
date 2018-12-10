@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartLock
-{/// <summary>
-/// Класс эталонного ключа
-/// </summary>
+    
+{   [Serializable]
+    /// <summary>
+    /// Класс эталонного ключа
+    /// </summary>
     public class FixedKey:Key
     {
         FixedKey() : base()

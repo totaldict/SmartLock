@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartLock
-{
+{[Serializable]
     public abstract class Key
     {
         DateTime date;

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace NewUI
 {
@@ -23,6 +24,17 @@ namespace NewUI
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void btnChkKey_Click(object sender, RoutedEventArgs e)
+        {
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)inkcanvas.ActualWidth, (int)inkcanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
+            rtb.Render(inkcanvas);
+            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(rtb));
+            FileStream fs = File.Open(@"D:\TestKey\test.bmp", FileMode.Create);
+            encoder.Save(fs);
+            fs.Close();
         }
     }
 }

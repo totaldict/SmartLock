@@ -7,6 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Image x:Name="image" HorizontalAlignment="Left" Height="250" Margin="10,10,0,0" VerticalAlignment="Top" Width="300" Source="rick.jpg" Stretch="Fill"/>
+        <InkCanvas Name="inkcanvas" Height="250" Width="300" Margin="10,10,207,0" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.7" >
+            <InkCanvas.Background>
+                <ImageBrush/>
+            </InkCanvas.Background>
+            <InkCanvas.DefaultDrawingAttributes>
+                <DrawingAttributes Color="Red" Width="10" FitToCurve="True" StylusTip="Ellipse" Height="10" />
+            </InkCanvas.DefaultDrawingAttributes>
+        </InkCanvas>
+        <Button x:Name="btnChkKey" Click="btnChkKey_Click" Content="Check key" HorizontalAlignment="Left" Margin="235,265,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>

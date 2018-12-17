@@ -22,7 +22,7 @@ namespace UISmartLock
         public string dir;
 
 public Form1()
-        {            
+        {        //!!!ЭТО СТАРЫЙ ПРОЕКТ UI, ПОКА ОСТАВЛЯЮ "НА ВСЯКИЙ СЛУЧАЙ", АКТУАЛЬНЫЙ UI - проект "New UI"!!!!!!    
             InitializeComponent();
             NewPic();
             //узнаём где находимся, проверяем есть ли папка, если нет - создаём

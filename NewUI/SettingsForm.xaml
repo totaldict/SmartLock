@@ -1,0 +1,22 @@
+﻿<Window x:Class="NewUI.SettingsForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NewUI"
+        mc:Ignorable="d"
+        Title="SettingsForm" Height="335" Width="323">
+    <Grid>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="250" Margin="10,10,0,0" VerticalAlignment="Top" Width="300" Source="finn.jpg" Stretch="Fill"/>
+        <InkCanvas Name="inkcanvasSet" HorizontalAlignment="Left" Height="250" Margin="10,10,0,0" VerticalAlignment="Top" Width="300" Opacity="0.7">
+            <InkCanvas.Background>
+                <ImageBrush />
+            </InkCanvas.Background>
+            <InkCanvas.DefaultDrawingAttributes>
+                <DrawingAttributes Color="Red" Width="10" FitToCurve="True" StylusTip="Ellipse" Height="10" />
+            </InkCanvas.DefaultDrawingAttributes>
+        </InkCanvas>
+        <Button x:Name="button" Content="Save Fixed Keys" Click="SaveFixKeys_Click" HorizontalAlignment="Left" Margin="104,265,0,0" VerticalAlignment="Top" Width="101" Height="35"/>
+        <Button x:Name="button1" Content="Clear key" Click="ClrKey_Click" HorizontalAlignment="Left" Margin="10,265,0,0" VerticalAlignment="Top" Width="89" Height="35"/>
+    </Grid>
+</Window>

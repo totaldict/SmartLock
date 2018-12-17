@@ -5,10 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NewUI"
         mc:Ignorable="d"
-        Title="SettingsForm" Height="335" Width="323">
+        Title="SettingsForm" Height="330" Width="308">
     <Grid>
-        <Image x:Name="image" HorizontalAlignment="Left" Height="250" Margin="10,10,0,0" VerticalAlignment="Top" Width="300" Source="finn.jpg" Stretch="Fill"/>
-        <InkCanvas Name="inkcanvasSet" HorizontalAlignment="Left" Height="250" Margin="10,10,0,0" VerticalAlignment="Top" Width="300" Opacity="0.7">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Image x:Name="image" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Source="finn.jpg" Stretch="Fill"/>
+        <InkCanvas Name="inkcanvasSet" Grid.Column="0" Opacity="0.7" Grid.ColumnSpan="2" Width="300" >
             <InkCanvas.Background>
                 <ImageBrush />
             </InkCanvas.Background>
@@ -16,7 +25,7 @@
                 <DrawingAttributes Color="Red" Width="10" FitToCurve="True" StylusTip="Ellipse" Height="10" />
             </InkCanvas.DefaultDrawingAttributes>
         </InkCanvas>
-        <Button x:Name="button" Content="Save Fixed Keys" Click="SaveFixKeys_Click" HorizontalAlignment="Left" Margin="104,265,0,0" VerticalAlignment="Top" Width="101" Height="35"/>
-        <Button x:Name="button1" Content="Clear key" Click="ClrKey_Click" HorizontalAlignment="Left" Margin="10,265,0,0" VerticalAlignment="Top" Width="89" Height="35"/>
+        <Button x:Name="ClrKeyBtn" Content="Clear key" Click="ClrKey_Click" Grid.Column="0" Grid.Row="1"/>
+        <Button x:Name="SaveFixKeysBtn" Content="Save Fixed Keys" Click="SaveFixKeys_Click" Grid.Column="1" Grid.Row="1"/>
     </Grid>
 </Window>

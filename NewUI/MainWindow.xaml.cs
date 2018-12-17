@@ -37,6 +37,7 @@ namespace NewUI
 
         private void btnChkKey_Click(object sender, RoutedEventArgs e)  //проверка ключа
         {
+            textBox1.Text = null;
             RenderTargetBitmap rtb = new RenderTargetBitmap((int)inkcanvas.ActualWidth, (int)inkcanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
             rtb.Render(inkcanvas);
             BmpBitmapEncoder encoder = new BmpBitmapEncoder();

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLock", "SmartLock\Smar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UISmartLock", "UISmartLock\UISmartLock.csproj", "{2E65DFC5-1B6E-41EF-ABF3-92DDEC78B15D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewUI", "NewUI\NewUI.csproj", "{B18CAF1B-5CF0-47EB-9534-1B470B938CC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2E65DFC5-1B6E-41EF-ABF3-92DDEC78B15D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E65DFC5-1B6E-41EF-ABF3-92DDEC78B15D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E65DFC5-1B6E-41EF-ABF3-92DDEC78B15D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B18CAF1B-5CF0-47EB-9534-1B470B938CC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B18CAF1B-5CF0-47EB-9534-1B470B938CC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B18CAF1B-5CF0-47EB-9534-1B470B938CC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B18CAF1B-5CF0-47EB-9534-1B470B938CC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,23 @@
+﻿<Window x:Class="NewUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NewUI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="250" Margin="0,0,0,0" VerticalAlignment="Top" Width="300" Source="finn.jpg" Stretch="Fill"/>
+        <InkCanvas Name="inkcanvas" Height="250" Width="300" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"  Opacity="0.7" >
+            <InkCanvas.Background>
+                <ImageBrush />
+            </InkCanvas.Background>
+            <InkCanvas.DefaultDrawingAttributes>
+                <DrawingAttributes Color="Red" Width="10" FitToCurve="True" StylusTip="Ellipse" Height="10" />
+            </InkCanvas.DefaultDrawingAttributes>
+        </InkCanvas>
+        <Button x:Name="btnChkKey" Click="btnChkKey_Click" Content="Check key" HorizontalAlignment="Left" Margin="113,288,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="btnSettings" Click="btnSettings_Click" Content="Settings" HorizontalAlignment="Left" Margin="414,21,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBox Name="textBox1" Height="150" Width="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>

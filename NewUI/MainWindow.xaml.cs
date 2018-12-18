@@ -16,7 +16,7 @@ using System.IO;
 using System.Drawing;
 using SmartLock;
 using System.Runtime.Serialization.Formatters.Binary;
-
+using static SmartLock.XMLFileSettings;
 
 namespace NewUI
 {

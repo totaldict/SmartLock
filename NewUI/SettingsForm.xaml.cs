@@ -15,6 +15,8 @@ using SmartLock;
 using System.IO;
 using System.Drawing;
 using System.Runtime.Serialization.Formatters.Binary;
+using static SmartLock.XMLFileSettings;
+using Microsoft.Win32;
 
 namespace NewUI
 {
@@ -26,11 +28,14 @@ namespace NewUI
         string dir;
         public FixedKey fix;       //пока тут создаём обьект эталонного ключа
         List<FixedKey> coll = new List<FixedKey>();
+        public Props props = new Props(); //экземпляр класса с настройками 
+
         public SettingsForm()
         {
             InitializeComponent();
             dir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\TestKey";
             System.IO.Directory.CreateDirectory(dir);
+            readSetting();
         }
 
         private void NewPic()//очистка формы для рисования
@@ -73,6 +78,69 @@ namespace NewUI
         private void ClrKey_Click(object sender, RoutedEventArgs e)
         {
             NewPic();
+        }
+
+        #region Настройки в XML
+        
+        //Запись настроек
+        private void writeSetting()
+        {
+            //Запись значений login/pass/background/места хранения ключей
+            props.Fields.login = loginTBox.Text;
+            props.Fields.pass = passTBox.Text;
+            props.Fields.bground = bgroundTBox.Text;
+            props.Fields.kFolder = kFolderTBox.Text;
+            props.WriteXml();
+        }
+        //Чтение настроек
+        private void readSetting()
+        {
+            props.ReadXml();
+            loginTBox.Text = props.Fields.login;
+            passTBox.Text = props.Fields.pass;
+            bgroundTBox.Text = props.Fields.bground;
+            kFolderTBox.Text = props.Fields.kFolder;
+            image.Source =new BitmapImage(new Uri($"{bgroundTBox.Text}"));  //меняем картинку
+        }
+        #endregion
+
+        private void SaveSettBtn_Click(object sender, RoutedEventArgs e)//сохранение настроек в xml
+        {
+            writeSetting();
+        }
+
+        private void LoadSettBtn_Click(object sender, RoutedEventArgs e)
+        {
+            readSetting();
+        }
+
+        private void bgBtn_Click(object sender, RoutedEventArgs e)//выбор другой картинки
+        {
+            OpenFileDialog myDialog = new OpenFileDialog();
+            myDialog.Filter = "Картинки(*.JPG;*.GIF)|*.JPG;*.GIF" + "|Все файлы (*.*)|*.* ";
+            myDialog.CheckFileExists = true;
+            myDialog.Multiselect = false;
+            if (myDialog.ShowDialog() == true)
+            {
+                bgroundTBox.Text = myDialog.FileName;   //меняем путь к картинке
+                image.Source = new BitmapImage(new Uri($"{bgroundTBox.Text}"));  //меняем картинку
+            }
+
+        }
+
+        private void KeyFolderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //ЗДЕСЬ СДЕЛАТЬ ВЫБОР ПАПКИ СОХРАНЕНИЯ
+            //OpenFileDialog myDialog = new OpenFileDialog();
+            //myDialog.Filter = "|Все файлы (*.*)|*.* ";
+            //myDialog.CheckFileExists = true;
+            //myDialog.Multiselect = false;
+            //myDialog.fold
+            //if (myDialog.ShowDialog() == true)
+            //{
+            //    bgroundTBox.Text = myDialog.FileName;   //меняем путь к картинке
+            //    image.Source = new BitmapImage(new Uri($"{bgroundTBox.Text}"));  //меняем картинку
+            //}
         }
     }
 }

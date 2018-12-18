@@ -49,6 +49,7 @@ namespace NewUI
         {
             inkcanvasSet.Strokes.Clear();
         }
+
         private void SaveFixKeys_Click(object sender, RoutedEventArgs e)
         {
             try

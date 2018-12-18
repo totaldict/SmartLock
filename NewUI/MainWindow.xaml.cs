@@ -25,7 +25,7 @@ namespace NewUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        public FixedKey fix;
+        public List<FixedKey> fix;
         public string dir;//путь сохранения
         private Props propsOpen = new Props(); //экземпляр класса с настройками 
         public MainWindow()
@@ -52,32 +52,34 @@ namespace NewUI
             dir = propsOpen.Fields.kFolder;
             image.Source = new BitmapImage(new Uri($"{bgimage}"));  //меняем картинку
         }
-        private void btnChkKey_Click(object sender, RoutedEventArgs e)  //проверка ключа
+        private Bitmap MakeBmpFromInkCanvas()   //Получение рисунка от InkCanvas и сохранение его
         {
-            textBox1.Text = null;
-            RenderTargetBitmap rtb = new RenderTargetBitmap((int)inkcanvas.ActualWidth, (int)inkcanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
-            rtb.Render(inkcanvas);
-            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(rtb));
-            string date = DateTime.Now.ToString().Replace(".", "").Replace(":", "").Replace(" ", "");
-            string path = $@"{dir}\testkey{date}.bmp";  //путь сохранения
-            FileStream fs = File.Open(path, FileMode.Create);//сохраняем рисунок ключа
-            encoder.Save(fs);
-            Bitmap bmp = new Bitmap(fs);
-            fs.Close();
+                RenderTargetBitmap rtb = new RenderTargetBitmap((int)inkcanvas.ActualWidth, (int)inkcanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
+                rtb.Render(inkcanvas);
+                BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(rtb));
+                string date = DateTime.Now.ToString().Replace(".", "").Replace(":", "").Replace(" ", "");
+                string path = $@"{dir}\testkey{date}.bmp";  //путь сохранения
+                FileStream fs = File.Open(path, FileMode.Create);//сохраняем рисунок ключа
+                encoder.Save(fs);
+                Bitmap bmp = new Bitmap(fs);
+                fs.Close();
+                return bmp;
+        }
 
+        private List<FixedKey> TakeFixKey() //чтение коллекции эталонных ключей из файла
+        {
             List<FixedKey> fix = new List<FixedKey>();
-            bool[,] arrFilled = BmpToMatrix(bmp);//переводим в вид матрицы
-            TestKey newKey = new TestKey(DateTime.Now, arrFilled);
+            FileStream fs = null;
             //чтение списка эталонных ключей
             try
-            {   //аытаемся прочитать коллекцию эталонных ключей
-                fs = new System.IO.FileStream($@"{dir}\collection.ini", System.IO.FileMode.Open);   
+            {   //пытаемся прочитать коллекцию эталонных ключей
+                fs = new System.IO.FileStream($@"{dir}\collection.ini", System.IO.FileMode.Open);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show($"Отсутствует файл эталонных ключей.\n{ex.Message}");
-                return;
+                return fix;
             }
             BinaryFormatter bf = new BinaryFormatter();
             fix.Clear();//очищаем коллекцию перед записью из файла
@@ -86,6 +88,16 @@ namespace NewUI
                 fix.Add((FixedKey)bf.Deserialize(fs));
             } while (fs.Position < fs.Length);
             fs.Close();
+            return fix;
+        }
+        private void btnChkKey_Click(object sender, RoutedEventArgs e)  //проверка ключа
+        {
+            textBox1.Text = null;//окно для вывода % совпадения ключей, потом убрать
+            Bitmap bmp = MakeBmpFromInkCanvas();
+            bool[,] arrFilled = BmpToMatrix(bmp);//переводим в вид матрицы тестовый ключ
+            TestKey newKey = new TestKey(DateTime.Now, arrFilled);
+            fix = TakeFixKey();
+            if (fix == null) return;//проверяем на наличие ключей
             int i = 1;
             foreach (FixedKey f in fix)
             {

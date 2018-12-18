@@ -31,15 +31,14 @@
         <Button x:Name="SaveSettBtn" Content="Save settings" Click="SaveSettBtn_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="103,218,0,0" VerticalAlignment="Top" Width="87"/>
         <TextBox x:Name="loginTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="63,25,0,0" TextWrapping="Wrap" Text="admin" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="passTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="63,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="bgroundTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="10,104,0,0" TextWrapping="Wrap" Text="finn.jpg" VerticalAlignment="Top" Width="125"/>
-        <TextBox x:Name="kFolderTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="10,151,0,0" TextWrapping="Wrap" Text="\\Testkey" VerticalAlignment="Top" Width="125"/>
+        <TextBox x:Name="bgroundTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="10,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125"/>
+        <TextBox x:Name="kFolderTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="10,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125"/>
         <Label x:Name="label" Content="Access:" Grid.Column="2" HorizontalAlignment="Left" Margin="59,-1,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,0.346"/>
         <Label x:Name="label1" Content="login:" Grid.Column="2" HorizontalAlignment="Left" Margin="20,23,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label2" Content="pass:" Grid.Column="2" HorizontalAlignment="Left" Margin="23,46,0,0" VerticalAlignment="Top"/>
         <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2" HorizontalAlignment="Left" Height="76" Margin="10,4,0,0" VerticalAlignment="Top" Width="180"/>
         <Label x:Name="label3" Content="Background:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label4" Content="Key storage folder:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,127,0,0" VerticalAlignment="Top" Width="180"/>
-        <Button x:Name="LoadSettBtn" Content="Load settings" Click="LoadSettBtn_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="88"/>
         <Button x:Name="bgFileDialogBtn" Content="Change" Click="bgBtn_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="140,103,0,0" VerticalAlignment="Top" Width="53" Height="25" RenderTransformOrigin="0.491,0.52"/>
         <Button x:Name="KeyFolderBtn" Content="Change" Click="KeyFolderBtn_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="140,151,0,0" VerticalAlignment="Top" Width="53"/>
     </Grid>

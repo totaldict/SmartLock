@@ -17,6 +17,7 @@ using System.Drawing;
 using System.Runtime.Serialization.Formatters.Binary;
 using static SmartLock.XMLFileSettings;
 using Microsoft.Win32;
+using System.Windows.Forms;
 
 namespace NewUI
 {
@@ -28,16 +29,22 @@ namespace NewUI
         string dir;
         public FixedKey fix;       //пока тут создаём обьект эталонного ключа
         List<FixedKey> coll = new List<FixedKey>();
-        public Props props = new Props(); //экземпляр класса с настройками 
+        private Props props = new Props(); //экземпляр класса с настройками 
 
         public SettingsForm()
         {
             InitializeComponent();
-            dir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\TestKey";
-            System.IO.Directory.CreateDirectory(dir);
-            readSetting();
+            LoadSett();
         }
 
+        private void LoadSett() //загрузка настроек в окно настроек при старте
+        {
+            dir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\TestKey";
+            System.IO.Directory.CreateDirectory(dir);
+            if (System.IO.File.Exists($@"{dir}\settings.xml"))
+                readSetting();  //при создании окна читаются настройки из xml-файла, если он существует))
+            
+        }
         private void NewPic()//очистка формы для рисования
         {
             inkcanvasSet.Strokes.Clear();
@@ -70,7 +77,7 @@ namespace NewUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
             }
         }
 
@@ -85,6 +92,11 @@ namespace NewUI
         //Запись настроек
         private void writeSetting()
         {
+            if (bgroundTBox.Text == "" || kFolderTBox.Text == "")
+            {
+                System.Windows.Forms.MessageBox.Show("Задайте рисунок и папку сохранения ключей.");
+                return;
+            }
             //Запись значений login/pass/background/места хранения ключей
             props.Fields.login = loginTBox.Text;
             props.Fields.pass = passTBox.Text;
@@ -100,6 +112,7 @@ namespace NewUI
             passTBox.Text = props.Fields.pass;
             bgroundTBox.Text = props.Fields.bground;
             kFolderTBox.Text = props.Fields.kFolder;
+            dir = kFolderTBox.Text;         //меняем папку сохранения эталонных ключей
             image.Source =new BitmapImage(new Uri($"{bgroundTBox.Text}"));  //меняем картинку
         }
         #endregion
@@ -109,14 +122,10 @@ namespace NewUI
             writeSetting();
         }
 
-        private void LoadSettBtn_Click(object sender, RoutedEventArgs e)
-        {
-            readSetting();
-        }
 
         private void bgBtn_Click(object sender, RoutedEventArgs e)//выбор другой картинки
         {
-            OpenFileDialog myDialog = new OpenFileDialog();
+            Microsoft.Win32.OpenFileDialog myDialog = new Microsoft.Win32.OpenFileDialog();
             myDialog.Filter = "Картинки(*.JPG;*.GIF)|*.JPG;*.GIF" + "|Все файлы (*.*)|*.* ";
             myDialog.CheckFileExists = true;
             myDialog.Multiselect = false;
@@ -128,19 +137,13 @@ namespace NewUI
 
         }
 
-        private void KeyFolderBtn_Click(object sender, RoutedEventArgs e)
+        private void KeyFolderBtn_Click(object sender, RoutedEventArgs e)   //меняем путь к папке сохранения ключей
         {
-            //ЗДЕСЬ СДЕЛАТЬ ВЫБОР ПАПКИ СОХРАНЕНИЯ
-            //OpenFileDialog myDialog = new OpenFileDialog();
-            //myDialog.Filter = "|Все файлы (*.*)|*.* ";
-            //myDialog.CheckFileExists = true;
-            //myDialog.Multiselect = false;
-            //myDialog.fold
-            //if (myDialog.ShowDialog() == true)
-            //{
-            //    bgroundTBox.Text = myDialog.FileName;   //меняем путь к картинке
-            //    image.Source = new BitmapImage(new Uri($"{bgroundTBox.Text}"));  //меняем картинку
-            //}
+            FolderBrowserDialog fldDialog = new FolderBrowserDialog();
+            fldDialog.ShowDialog();   
+            kFolderTBox.Text = fldDialog.SelectedPath;
+            
         }
+
     }
 }

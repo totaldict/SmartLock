@@ -27,14 +27,31 @@ namespace NewUI
     {
         public FixedKey fix;
         public string dir;//путь сохранения
+        private Props propsOpen = new Props(); //экземпляр класса с настройками 
         public MainWindow()
         {
             InitializeComponent();
+            LoadSettXMLMainWindow();
+            
+        }
+
+        public void LoadSettXMLMainWindow()
+        {
             //узнаём где находимся, проверяем есть ли папка, если нет - создаём
             dir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\TestKey";
             System.IO.Directory.CreateDirectory(dir);
+            if (System.IO.File.Exists($@"{dir}\settings.xml"))
+                readSetting(); //если есть файл настроек-грузим их.
         }
 
+        //Чтение настроек из xml-файла
+        private void readSetting()
+        {
+            propsOpen.ReadXml();
+            string bgimage = propsOpen.Fields.bground;
+            dir = propsOpen.Fields.kFolder;
+            image.Source = new BitmapImage(new Uri($"{bgimage}"));  //меняем картинку
+        }
         private void btnChkKey_Click(object sender, RoutedEventArgs e)  //проверка ключа
         {
             textBox1.Text = null;
@@ -53,7 +70,15 @@ namespace NewUI
             bool[,] arrFilled = BmpToMatrix(bmp);//переводим в вид матрицы
             TestKey newKey = new TestKey(DateTime.Now, arrFilled);
             //чтение списка эталонных ключей
-            fs = new System.IO.FileStream($@"{dir}\collection.ini", System.IO.FileMode.Open);
+            try
+            {   //аытаемся прочитать коллекцию эталонных ключей
+                fs = new System.IO.FileStream($@"{dir}\collection.ini", System.IO.FileMode.Open);   
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Отсутствует файл эталонных ключей.\n{ex.Message}");
+                return;
+            }
             BinaryFormatter bf = new BinaryFormatter();
             fix.Clear();//очищаем коллекцию перед записью из файла
             do

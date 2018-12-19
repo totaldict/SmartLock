@@ -32,7 +32,7 @@ namespace NewUI
         {
             InitializeComponent();
             LoadSettXMLMainWindow();
-            
+            LogWrite("Запущено окно MainWindow.");  //лог
         }
 
         public void LoadSettXMLMainWindow()
@@ -51,6 +51,15 @@ namespace NewUI
             string bgimage = propsOpen.Fields.bground;
             dir = propsOpen.Fields.kFolder;
             image.Source = new BitmapImage(new Uri($"{bgimage}"));  //меняем картинку
+            LogWrite($"Прочитаны настройки из XML-файла {propsOpen.Fields.XMLFileName}");//лог
+        }
+        private void LogWrite(string str)   //записывает строку лога
+        {
+            string logLine = $"{DateTime.Now.ToString()}\t{str}{Environment.NewLine}";
+            //if (!System.IO.File.Exists($@"{dir}\log.txt"))  //если файл лога не существует - создаём новый
+                //File.Create($@"{dir}\log.txt");
+            File.AppendAllText($@"{dir}\log.txt", logLine);
+            
         }
         private Bitmap MakeBmpFromInkCanvas()   //Получение рисунка от InkCanvas и сохранение его
         {

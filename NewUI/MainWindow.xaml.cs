@@ -56,10 +56,7 @@ namespace NewUI
         private void LogWrite(string str)   //записывает строку лога
         {
             string logLine = $"{DateTime.Now.ToString()}\t{str}{Environment.NewLine}";
-            //if (!System.IO.File.Exists($@"{dir}\log.txt"))  //если файл лога не существует - создаём новый
-                //File.Create($@"{dir}\log.txt");
-            File.AppendAllText($@"{dir}\log.txt", logLine);
-            
+            File.AppendAllText($@"{dir}\log.txt", logLine); //если файла лога нет, то создаём новый, если есть - дозаписываем в него и закрываем
         }
         private Bitmap MakeBmpFromInkCanvas()   //Получение рисунка от InkCanvas и сохранение его
         {
@@ -73,6 +70,7 @@ namespace NewUI
                 encoder.Save(fs);
                 Bitmap bmp = new Bitmap(fs);
                 fs.Close();
+                LogWrite($@"Ключ testkey{date}.bmp записан в каталог {dir}");
                 return bmp;
         }
 
@@ -80,7 +78,6 @@ namespace NewUI
         {
             List<FixedKey> fix = new List<FixedKey>();
             FileStream fs = null;
-            //чтение списка эталонных ключей
             try
             {   //пытаемся прочитать коллекцию эталонных ключей
                 fs = new System.IO.FileStream($@"{dir}\collection.ini", System.IO.FileMode.Open);
@@ -88,7 +85,8 @@ namespace NewUI
             catch (Exception ex)
             {
                 MessageBox.Show($"Отсутствует файл эталонных ключей.\n{ex.Message}");
-                return fix;
+                LogWrite($"Отсутствует файл эталонных ключей.\n{ex.Message}");
+                return fix=null;    //если файл ключей не найден - возвращаем пустую коллекцию
             }
             BinaryFormatter bf = new BinaryFormatter();
             fix.Clear();//очищаем коллекцию перед записью из файла
@@ -97,11 +95,12 @@ namespace NewUI
                 fix.Add((FixedKey)bf.Deserialize(fs));
             } while (fs.Position < fs.Length);
             fs.Close();
+            LogWrite($@"Файл эталонных ключей прочитан из {dir}\collection.ini");
             return fix;
         }
         private void btnChkKey_Click(object sender, RoutedEventArgs e)  //проверка ключа
         {
-            textBox1.Text = null;//окно для вывода % совпадения ключей, потом убрать
+            textBox1.Text = null;//##окно для вывода % совпадения ключей, потом убрать
             Bitmap bmp = MakeBmpFromInkCanvas();
             bool[,] arrFilled = BmpToMatrix(bmp);//переводим в вид матрицы тестовый ключ
             TestKey newKey = new TestKey(DateTime.Now, arrFilled);
@@ -114,14 +113,19 @@ namespace NewUI
                 textBox1.Text += $"{i}) {ck}%" + Environment.NewLine;
                 i++;
             }
+            LogWrite($"Произведено сравнение ключа c эталонным.");
             inkcanvas.Strokes.Clear();  //очищаем поле ввода ключа
         }
         public static bool[,] BmpToMatrix(Bitmap b)
-        {
-            string str = b.GetPixel(1, 1).Name;
-            string str2 = b.GetPixel(2, 2).Name;
+        { 
+            bool[,] pixels = PixelMatrix(b);    //переводим рисунок ключа в матрицу пикселей
+            int[,] summFilled = PixelCountInCell(pixels);//матрица количества закрашеных пикселей в каждом квадрате 30*25
+            bool[,] arrFilled = DecisionPainted(summFilled);//матрица со значениями bool, нарисовано ли в каждом квадрате 30*25
+            return arrFilled;
+        }
 
-            // Считываем в массив заполненных пикселей (медленно), в след. итерации попробовать Bitmap.LockBits 
+        public static bool[,] PixelMatrix(Bitmap b)
+        {   // ##Считываем в массив заполненных пикселей (медленно), в след. итерации попробовать Bitmap.LockBits
             bool[,] pixels = new bool[b.Width, b.Height];
             for (int i = 0; i < b.Width; ++i)
             {
@@ -133,13 +137,15 @@ namespace NewUI
                         pixels[i, j] = false;
                 }
             }
-            //создаём массив для сверки
-            bool[,] arrFilled = new bool[10, 10];//матрица со значениями bool, нарисовано ли в каждом квадрате 30*25
-            int[,] summFilled = new int[10, 10];//матрица количества закрашеных пикселей в каждом квадрате 30*25
+            return pixels;
+        }
+        public static int[,] PixelCountInCell(bool[,] pixels)
+        {   //Создаём матрицу количества закрашеных пикселей в каждом квадрате 30*25
+            int[,] summFilled = new int[10, 10];
             int summ = 0;
-            for (int i = 0; i < b.Width / 30; i++)     //НА СЛЕД.ИТЕРАЦИИ СДЕЛАТЬ параметр регулировки шага сетки
+            for (int i = 0; i < pixels.GetLength(0) / 30; i++)     //##НА СЛЕД.ИТЕРАЦИИ СДЕЛАТЬ параметр регулировки шага сетки
             {
-                for (int j = 0; j < b.Height / 25; j++)
+                for (int j = 0; j < pixels.GetLength(1) / 25; j++)
                 {
                     for (int k = i * 30; k < (i + 1) * 30; k++)
                     {
@@ -152,18 +158,21 @@ namespace NewUI
                     summ = 0;
                 }
             }
-            for (int i = 0; i < 10; i++)        //отпечаток ключа, ячейки bool
+            return summFilled;
+        }
+        public static bool[,] DecisionPainted(int[,] summFilled)
+        {   //По количеству закрашенных пикселей в каждой ячейке решаем, закрашена ли она
+            bool[,] arrFilled = new bool[10, 10];//матрица со значениями bool, нарисовано ли в каждом квадрате 30*25
+            for (int i = 0; i < 10; i++)        
                 for (int j = 0; j < 10; j++)
                 {
-                    if (summFilled[i, j] > 50)      //тут параметр закрашенности ячейки. если больше его - ячейка закрашена
+                    if (summFilled[i, j] > 50)      //##тут параметр закрашенности ячейки. если больше его - ячейка закрашена
                         arrFilled[i, j] = true;
                     else
                         arrFilled[i, j] = false;
                 }
-
             return arrFilled;
         }
-        
 
         private void btnSettings_Click(object sender, RoutedEventArgs e) //вызов окна настроек
         {

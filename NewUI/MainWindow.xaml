@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NewUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="327.762" Width="519.199">
+        Title="MainWindow" Height="330" Width="508">
     <Grid>
         <Image x:Name="image" HorizontalAlignment="Left" Height="250" Margin="0,0,0,0" VerticalAlignment="Top" Width="300" Source="finn.jpg" Stretch="Fill"/>
         <InkCanvas Name="inkcanvas" Height="250" Width="300" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"  Opacity="0.7" >
@@ -17,7 +17,7 @@
             </InkCanvas.DefaultDrawingAttributes>
         </InkCanvas>
         <Button x:Name="btnChkKey" Click="btnChkKey_Click" Content="Check key" HorizontalAlignment="Left" Margin="107,255,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="btnSettings" Click="btnSettings_Click" Content="Settings" HorizontalAlignment="Left" Margin="426,10,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="btnSettings" Click="btnSettings_Click" Content="Settings" HorizontalAlignment="Left" Margin="410,10,0,0" VerticalAlignment="Top" Width="75"/>
         <TextBox Name="textBox1" Height="220" Width="100" HorizontalAlignment="left" VerticalAlignment="Top" Margin="300,30,0,0"/>
         <Label x:Name="label" Content="Результат:" HorizontalAlignment="Left" Margin="305,0,0,0" VerticalAlignment="Top" Width="100"/>
     </Grid>

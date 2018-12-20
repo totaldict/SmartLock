@@ -30,6 +30,7 @@ namespace NewUI
         private Props propsOpen = new Props(); //экземпляр класса с настройками 
         public MainWindow()
         {
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
             LoadSettXMLMainWindow();
             LogWrite("Запущено окно MainWindow.");  //лог
@@ -174,10 +175,11 @@ namespace NewUI
             return arrFilled;
         }
 
-        private void btnSettings_Click(object sender, RoutedEventArgs e) //вызов окна настроек
+        private void btnSettings_Click(object sender, RoutedEventArgs e) //вызов окна авторизации для входа в настройки
         {
-            SettingsForm frm2 = new SettingsForm();
-            frm2.Show();
+            AuthWindow authFrm = new AuthWindow();
+            authFrm.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            authFrm.Show();
         }
     }
 }

@@ -34,8 +34,9 @@ namespace NewUI
         public SettingsForm()
         {
             InitializeComponent();
-            LogWrite("Открыто окно настроек.");
+            System.Windows.Application.Current.MainWindow.Close();
             LoadSett();
+            LogWrite("Открыто окно настроек.");
         }
 
         private void LoadSett() //загрузка настроек в окно настроек при старте
@@ -165,5 +166,11 @@ namespace NewUI
             LogWrite($"Изменена папка хранения ключей на {kFolderTBox.Text}.");
         }
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {   //при закрытии окна настроек перезапускаем основное окно
+            LogWrite("Меню настроек закрыто.");
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+        }
     }
 }

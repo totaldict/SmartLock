@@ -27,6 +27,7 @@ namespace NewUI
     {
         public List<FixedKey> fix;
         public string dir;//путь сохранения
+        private string port;
         private Props propsOpen = new Props(); //экземпляр класса с настройками 
         public MainWindow()
         {
@@ -51,6 +52,7 @@ namespace NewUI
             propsOpen.ReadXml();
             string bgimage = propsOpen.Fields.bground;
             dir = propsOpen.Fields.kFolder;
+            port = propsOpen.Fields.port;
             image.Source = new BitmapImage(new Uri($"{bgimage}"));  //меняем картинку
             LogWrite($"Прочитаны настройки из XML-файла {propsOpen.Fields.XMLFileName}");//лог
         }

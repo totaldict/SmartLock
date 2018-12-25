@@ -113,10 +113,10 @@ namespace NewUI
         //Запись настроек
         private void writeSetting()
         {
-            if (bgroundTBox.Text == "" || kFolderTBox.Text == "")
+            if (bgroundTBox.Text == "" || kFolderTBox.Text == ""||comboBox.SelectedItem==null)
             {
-                System.Windows.Forms.MessageBox.Show("Задайте рисунок и папку сохранения ключей.");
-                LogWrite("При сохранении настроек возникла ошибка - не задан путь к заднему рисунку/не задана папка сохранения ключей.");
+                System.Windows.Forms.MessageBox.Show("Не все настройки заданы.");
+                LogWrite("При сохранении настроек возникла ошибка - не задан путь к заднему рисунку/не задана папка сохранения ключей/не выбран порт соединения.");
                 return;
             }
             //Запись значений login/pass/background/места хранения ключей
@@ -124,6 +124,7 @@ namespace NewUI
             props.Fields.pass = passTBox.Text;
             props.Fields.bground = bgroundTBox.Text;
             props.Fields.kFolder = kFolderTBox.Text;
+            props.Fields.port = comboBox.SelectedItem.ToString();
             props.WriteXml();
             LogWrite($"Настройки программы записаны в файл {props.Fields.XMLFileName}.");
         }
@@ -136,6 +137,8 @@ namespace NewUI
             bgroundTBox.Text = props.Fields.bground;
             kFolderTBox.Text = props.Fields.kFolder;
             dir = kFolderTBox.Text;         //меняем папку сохранения эталонных ключей
+            comboBox.Items.Add(props.Fields.port);  //добавляем в список порт из файла настроек
+            comboBox.SelectedItem = props.Fields.port;  //делаем выставляем его в значение comboBox
             image.Source =new BitmapImage(new Uri($"{bgroundTBox.Text}"));  //меняем картинку
             LogWrite($"Настройки программы прочитаны из файла {props.Fields.XMLFileName}.");
         }

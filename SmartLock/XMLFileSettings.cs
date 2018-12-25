@@ -19,6 +19,7 @@ namespace SmartLock
             public string pass = "";
             public string bground = "finn.jpg";
             public string kFolder = Environment.CurrentDirectory + @"\TestKey";
+            public string port = "COM1";
         }
         //Класс работы с настройками
         public class Props

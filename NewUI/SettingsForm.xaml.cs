@@ -18,6 +18,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using static SmartLock.XMLFileSettings;
 using Microsoft.Win32;
 using System.Windows.Forms;
+using System.IO.Ports;
 
 namespace NewUI
 {
@@ -30,6 +31,8 @@ namespace NewUI
         public FixedKey fix;       //пока тут создаём обьект эталонного ключа
         List<FixedKey> coll = new List<FixedKey>();
         private Props props = new Props(); //экземпляр класса с настройками 
+        bool isConnected = false;   //переменна статуса подключения замка
+        SerialPort port;            //порт замка
 
         public SettingsForm()
         {
@@ -171,6 +174,74 @@ namespace NewUI
             LogWrite("Меню настроек закрыто.");
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
+        }
+
+        private void UpdateCOMBtn_Click(object sender, RoutedEventArgs e)
+        {
+            comboBox.Items.Clear();
+            string[] portnames = SerialPort.GetPortNames();     // Получаем список COM портов доступных в системе
+            if (portnames.Length == 0)  // Проверяем есть ли доступные
+            {
+                System.Windows.MessageBox.Show("COM PORT not found");
+            }
+            foreach (string s in portnames)
+            {
+                comboBox.Items.Add(s);      //добавляем доступные COM порты в список
+            }
+        }
+        private void connectToArduino()     //открываем выбранный порт
+        {
+            isConnected = true;
+            string selectedPort = comboBox.SelectedItem.ToString();
+            port = new SerialPort(selectedPort, 9600, Parity.None, 8, StopBits.One);
+            port.Open();
+            ConnectBtn.Content = "Disconnect";
+        }
+
+        private void disconnectFromArduino()    //закрываем выбранный порт
+        {
+            isConnected = false;
+            port.Close();
+            ConnectBtn.Content = "Connect";
+        }
+
+        private void ConnectBtn_Click(object sender, RoutedEventArgs e)     //кнопка Connect
+        {
+            try
+            {
+                if (!isConnected)
+                    connectToArduino();
+                else
+                    disconnectFromArduino();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void LockOpenBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                port.Write("#x|");//открываем замок
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void LockCloseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                port.Write("#w|");//закрываем замок
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
         }
     }
 }

@@ -5,41 +5,56 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NewUI"
         mc:Ignorable="d"
-        Title="SettingsForm" Height="330" Width="508" Closing="Window_Closing">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="250"/>
-            <RowDefinition Height="50"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        Title="SettingsForm" Height="367" Width="435" Closing="Window_Closing">
+    <TabControl>
+        <TabItem Header="Fixed Key">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="250"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <Image x:Name="image" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Source="finn.jpg" Stretch="Fill"/>
-        <InkCanvas Name="inkcanvasSet" Grid.Column="0" Opacity="0.7" Grid.ColumnSpan="2" Width="300" >
-            <InkCanvas.Background>
-                <ImageBrush />
-            </InkCanvas.Background>
-            <InkCanvas.DefaultDrawingAttributes>
-                <DrawingAttributes Color="Red" Width="10" FitToCurve="True" StylusTip="Ellipse" Height="10" />
-            </InkCanvas.DefaultDrawingAttributes>
-        </InkCanvas>
-        <Button x:Name="ClrKeyBtn" Content="Clear key" Click="ClrKey_Click" Grid.Column="0" Grid.Row="1"/>
-        <Button x:Name="SaveFixKeysBtn" Content="Save Fixed Keys" Click="SaveFixKeys_Click" Grid.Column="1" Grid.Row="1"/>
-        <Button x:Name="SaveSettBtn" Content="Save settings" Click="SaveSettBtn_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="103,218,0,0" VerticalAlignment="Top" Width="87"/>
-        <TextBox x:Name="loginTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="63,25,0,0" TextWrapping="Wrap" Text="admin" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="passTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="63,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="bgroundTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="10,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125"/>
-        <TextBox x:Name="kFolderTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="10,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125"/>
-        <Label x:Name="label" Content="Access:" Grid.Column="2" HorizontalAlignment="Left" Margin="59,-1,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,0.346"/>
-        <Label x:Name="label1" Content="login:" Grid.Column="2" HorizontalAlignment="Left" Margin="20,23,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label2" Content="pass:" Grid.Column="2" HorizontalAlignment="Left" Margin="23,46,0,0" VerticalAlignment="Top"/>
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="2" HorizontalAlignment="Left" Height="76" Margin="10,4,0,0" VerticalAlignment="Top" Width="180"/>
-        <Label x:Name="label3" Content="Background:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label4" Content="Key storage folder:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,127,0,0" VerticalAlignment="Top" Width="180"/>
-        <Button x:Name="bgFileDialogBtn" Content="Change" Click="bgBtn_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="140,103,0,0" VerticalAlignment="Top" Width="53" Height="25" RenderTransformOrigin="0.491,0.52"/>
-        <Button x:Name="KeyFolderBtn" Content="Change" Click="KeyFolderBtn_Click" Grid.Column="2" HorizontalAlignment="Left" Margin="140,151,0,0" VerticalAlignment="Top" Width="53"/>
-    </Grid>
+                <Image x:Name="image" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Source="finn.jpg" Stretch="Fill"/>
+                <InkCanvas Name="inkcanvasSet" Grid.Column="0" Opacity="0.7" Grid.ColumnSpan="2" Width="300" >
+                    <InkCanvas.Background>
+                        <ImageBrush />
+                    </InkCanvas.Background>
+                    <InkCanvas.DefaultDrawingAttributes>
+                        <DrawingAttributes Color="Red" Width="10" FitToCurve="True" StylusTip="Ellipse" Height="10" />
+                    </InkCanvas.DefaultDrawingAttributes>
+                </InkCanvas>
+                <Button x:Name="ClrKeyBtn" Content="Clear key" Click="ClrKey_Click" Grid.Column="0" Grid.Row="1"/>
+                <Button x:Name="SaveFixKeysBtn" Content="Save Fixed Keys" Click="SaveFixKeys_Click" Grid.Column="1" Grid.Row="1"/>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Main settings">
+            <Grid>
+                <Button x:Name="SaveSettBtn" Content="Save settings" Click="SaveSettBtn_Click" HorizontalAlignment="Left" Margin="308,266,0,0" VerticalAlignment="Top" Width="87"/>
+                <TextBox x:Name="loginTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="63,25,0,0" TextWrapping="Wrap" Text="admin" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="passTBox" HorizontalAlignment="Left" Height="23" Margin="269,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="bgroundTBox" HorizontalAlignment="Left" Height="23" Margin="10,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="317"/>
+                <TextBox x:Name="kFolderTBox" HorizontalAlignment="Left" Height="23" Margin="10,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="317"/>
+                <Label x:Name="label" Content="Access:" Grid.Column="2" HorizontalAlignment="Left" Margin="59,-1,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,0.346"/>
+                <Label x:Name="label1" Content="login:" Grid.Column="2" HorizontalAlignment="Left" Margin="20,23,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label2" Content="pass:" HorizontalAlignment="Left" Margin="218,23,0,0" VerticalAlignment="Top"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="76" Margin="10,4,0,0" VerticalAlignment="Top" Width="392" Opacity="0.3"/>
+                <Label x:Name="label3" Content="Background:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label4" Content="Key storage folder:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,127,0,0" VerticalAlignment="Top" Width="180"/>
+                <Button x:Name="bgFileDialogBtn" Content="Change" Click="bgBtn_Click" HorizontalAlignment="Left" Margin="342,102,0,0" VerticalAlignment="Top" Width="53" Height="25" RenderTransformOrigin="0.491,0.52"/>
+                <Button x:Name="KeyFolderBtn" Content="Change" Click="KeyFolderBtn_Click" HorizontalAlignment="Left" Margin="342,151,0,0" VerticalAlignment="Top" Width="53"/>
+                <Button x:Name="UpdateCOMBtn" Content="Update" Click="UpdateCOMBtn_Click" HorizontalAlignment="Left" Margin="20,203,0,0" VerticalAlignment="Top" Width="75"/>
+                <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="109,203,0,0" VerticalAlignment="Top" Width="96"/>
+                <Button x:Name="ConnectBtn" Content="Connect" Click="ConnectBtn_Click" HorizontalAlignment="Left" Margin="218,203,0,0" VerticalAlignment="Top" Width="75"/>
+                <Button x:Name="LockOpenBtn" Content="Lock Open" Click="LockOpenBtn_Click" HorizontalAlignment="Left" Margin="320,203,0,0" VerticalAlignment="Top" Width="75"/>
+                <Button x:Name="LockCloseBtn" Content="Lock Close" Click="LockCloseBtn_Click" HorizontalAlignment="Left" Margin="320,230,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.507,0.591"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="72" Margin="10,189,0,0" VerticalAlignment="Top" Width="392" Opacity="0.3"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>

@@ -17,6 +17,7 @@ using System.Drawing;
 using SmartLock;
 using System.Runtime.Serialization.Formatters.Binary;
 using static SmartLock.XMLFileSettings;
+using System.IO.Ports;
 
 namespace NewUI
 {
@@ -27,7 +28,7 @@ namespace NewUI
     {
         public List<FixedKey> fix;
         public string dir;//путь сохранения
-        private string port;
+        private SerialPort port;
         private Props propsOpen = new Props(); //экземпляр класса с настройками 
         public MainWindow()
         {
@@ -52,7 +53,8 @@ namespace NewUI
             propsOpen.ReadXml();
             string bgimage = propsOpen.Fields.bground;
             dir = propsOpen.Fields.kFolder;
-            port = propsOpen.Fields.port;
+            port = new SerialPort(propsOpen.Fields.port, 9600, Parity.None, 8, StopBits.One);   //инициализируем порт из настроек
+            port.Open();
             image.Source = new BitmapImage(new Uri($"{bgimage}"));  //меняем картинку
             LogWrite($"Прочитаны настройки из XML-файла {propsOpen.Fields.XMLFileName}");//лог
         }
@@ -114,6 +116,7 @@ namespace NewUI
             {
                 int ck = newKey.CheckTestKey(newKey.matrix, f.matrix);
                 textBox1.Text += $"{i}) {ck}%" + Environment.NewLine;
+                if (ck >= 98) OpenLock();                                //##Подумать над механизмом разрешения!!!
                 i++;
             }
             LogWrite($"Произведено сравнение ключа c эталонным.");
@@ -182,6 +185,10 @@ namespace NewUI
             AuthWindow authFrm = new AuthWindow();
             authFrm.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             authFrm.Show();
+        }
+        private void OpenLock()
+        {
+            port.Write("#O|"); //Передаём О для открытия на 5 сек, задано в скетче
         }
     }
 }

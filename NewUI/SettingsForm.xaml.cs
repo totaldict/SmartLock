@@ -227,7 +227,7 @@ namespace NewUI
         {
             try
             {
-                port.Write("#x|");//открываем замок
+                port.Write("#x| #A90|");//открываем замок
             }
             catch (Exception ex)
             {
@@ -239,12 +239,13 @@ namespace NewUI
         {
             try
             {
-                port.Write("#w|");//закрываем замок
+                port.Write("#w| #A-90|");//закрываем замок
             }
             catch (Exception ex)
             {
                 System.Windows.MessageBox.Show(ex.Message);
             }
         }
+        
     }
 }

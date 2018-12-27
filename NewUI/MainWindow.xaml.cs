@@ -53,10 +53,21 @@ namespace NewUI
             propsOpen.ReadXml();
             string bgimage = propsOpen.Fields.bground;
             dir = propsOpen.Fields.kFolder;
-            port = new SerialPort(propsOpen.Fields.port, 9600, Parity.None, 8, StopBits.One);   //инициализируем порт из настроек
-            port.Open();
+            OpenPort(propsOpen.Fields.port);   //открываем порт
             image.Source = new BitmapImage(new Uri($"{bgimage}"));  //меняем картинку
             LogWrite($"Прочитаны настройки из XML-файла {propsOpen.Fields.XMLFileName}");//лог
+        }
+        private void OpenPort(string portNr)    //открываем порт с заданным номером
+        {
+            try
+            {
+                port = new SerialPort(portNr, 9600, Parity.None, 8, StopBits.One);   //инициализируем порт с настройками
+                port.Open();    //открываем порт
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"В настройках указан неверный порт соединения.\n{ex.Message}");
+            }
         }
         private void LogWrite(string str)   //записывает строку лога
         {
@@ -105,6 +116,7 @@ namespace NewUI
         }
         private void btnChkKey_Click(object sender, RoutedEventArgs e)  //проверка ключа
         {
+            bool opened = false;
             textBox1.Text = null;//##окно для вывода % совпадения ключей, потом убрать
             Bitmap bmp = MakeBmpFromInkCanvas();
             bool[,] arrFilled = BmpToMatrix(bmp);//переводим в вид матрицы тестовый ключ
@@ -116,7 +128,11 @@ namespace NewUI
             {
                 int ck = newKey.CheckTestKey(newKey.matrix, f.matrix);
                 textBox1.Text += $"{i}) {ck}%" + Environment.NewLine;
-                if (ck >= 98) OpenLock();                                //##Подумать над механизмом разрешения!!!
+                if (ck >= 98 && !opened)
+                {
+                    OpenLock();                                //##Подумать над механизмом разрешения!!!
+                    opened = true;
+                }
                 i++;
             }
             LogWrite($"Произведено сравнение ключа c эталонным.");
@@ -188,7 +204,13 @@ namespace NewUI
         }
         private void OpenLock()
         {
-            port.Write("#O|"); //Передаём О для открытия на 5 сек, задано в скетче
+            port.Write("#x|#O|#w|"); //Передаём О для открытия на 5 сек, задано в скетче, x-вкл.светодиод, w-выкл. светодиод.
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (port != null)
+                if (port.IsOpen) port.Close();   //закрываем порт если открыт при закрытии формы
         }
     }
 }

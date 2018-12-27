@@ -175,6 +175,8 @@ namespace NewUI
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {   //при закрытии окна настроек перезапускаем основное окно
             LogWrite("Меню настроек закрыто.");
+            if (port!=null)
+                if (port.IsOpen) port.Close();   //закрываем порт если открыт
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
         }

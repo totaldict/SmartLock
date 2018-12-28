@@ -18,6 +18,7 @@ using SmartLock;
 using System.Runtime.Serialization.Formatters.Binary;
 using static SmartLock.XMLFileSettings;
 using System.IO.Ports;
+using System.Threading;
 
 namespace NewUI
 {
@@ -30,11 +31,13 @@ namespace NewUI
         public string dir;//путь сохранения
         private SerialPort port;
         private Props propsOpen = new Props(); //экземпляр класса с настройками 
+        bool stopStatus = false;
         public MainWindow()
         {
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
             LoadSettXMLMainWindow();
+            PortStatusAsync();                      //поддерживает подключение и сообщает статус
             LogWrite("Запущено окно MainWindow.");  //лог
         }
 
@@ -76,18 +79,18 @@ namespace NewUI
         }
         private Bitmap MakeBmpFromInkCanvas()   //Получение рисунка от InkCanvas и сохранение его
         {
-                RenderTargetBitmap rtb = new RenderTargetBitmap((int)inkcanvas.ActualWidth, (int)inkcanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
-                rtb.Render(inkcanvas);
-                BmpBitmapEncoder encoder = new BmpBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(rtb));
-                string date = DateTime.Now.ToString().Replace(".", "").Replace(":", "").Replace(" ", "");
-                string path = $@"{dir}\testkey{date}.bmp";  //путь сохранения
-                FileStream fs = File.Open(path, FileMode.Create);//сохраняем рисунок ключа
-                encoder.Save(fs);
-                Bitmap bmp = new Bitmap(fs);
-                fs.Close();
-                LogWrite($@"Ключ testkey{date}.bmp записан в каталог {dir}");
-                return bmp;
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)inkcanvas.ActualWidth, (int)inkcanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
+            rtb.Render(inkcanvas);
+            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(rtb));
+            string date = DateTime.Now.ToString().Replace(".", "").Replace(":", "").Replace(" ", "");
+            string path = $@"{dir}\testkey{date}.bmp";  //путь сохранения
+            FileStream fs = File.Open(path, FileMode.Create);//сохраняем рисунок ключа
+            encoder.Save(fs);
+            Bitmap bmp = new Bitmap(fs);
+            fs.Close();
+            LogWrite($@"Ключ testkey{date}.bmp записан в каталог {dir}");
+            return bmp;
         }
 
         private List<FixedKey> TakeFixKey() //чтение коллекции эталонных ключей из файла
@@ -102,7 +105,7 @@ namespace NewUI
             {
                 MessageBox.Show($"Отсутствует файл эталонных ключей.\n{ex.Message}");
                 LogWrite($"Отсутствует файл эталонных ключей.\n{ex.Message}");
-                return fix=null;    //если файл ключей не найден - возвращаем пустую коллекцию
+                return fix = null;    //если файл ключей не найден - возвращаем пустую коллекцию
             }
             BinaryFormatter bf = new BinaryFormatter();
             fix.Clear();//очищаем коллекцию перед записью из файла
@@ -139,7 +142,7 @@ namespace NewUI
             inkcanvas.Strokes.Clear();  //очищаем поле ввода ключа
         }
         public static bool[,] BmpToMatrix(Bitmap b)
-        { 
+        {
             bool[,] pixels = PixelMatrix(b);    //переводим рисунок ключа в матрицу пикселей
             int[,] summFilled = PixelCountInCell(pixels);//матрица количества закрашеных пикселей в каждом квадрате 30*25
             bool[,] arrFilled = DecisionPainted(summFilled);//матрица со значениями bool, нарисовано ли в каждом квадрате 30*25
@@ -185,7 +188,7 @@ namespace NewUI
         public static bool[,] DecisionPainted(int[,] summFilled)
         {   //По количеству закрашенных пикселей в каждой ячейке решаем, закрашена ли она
             bool[,] arrFilled = new bool[10, 10];//матрица со значениями bool, нарисовано ли в каждом квадрате 30*25
-            for (int i = 0; i < 10; i++)        
+            for (int i = 0; i < 10; i++)
                 for (int j = 0; j < 10; j++)
                 {
                     if (summFilled[i, j] > 50)      //##тут параметр закрашенности ячейки. если больше его - ячейка закрашена
@@ -204,13 +207,65 @@ namespace NewUI
         }
         private void OpenLock()
         {
-            port.Write("#x|#O|#w|"); //Передаём О для открытия на 5 сек, задано в скетче, x-вкл.светодиод, w-выкл. светодиод.
+            try
+            {
+                port.Write("#x|#O|#w|"); //Передаём О для открытия на 5 сек, задано в скетче, x-вкл.светодиод, w-выкл. светодиод.
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Невозможно связаться с замком.\n{ex.Message}");
+                //##Логирование ошибки
+            }
+        }
+
+        private async void PortStatusAsync()
+        {
+            do              //бесконечный цикл
+            {
+                PortName.Content = port.PortName;       //имя порта пишем
+                string message = await Task.Factory.StartNew(() => PortStatus(), TaskCreationOptions.LongRunning);
+                if (message == "ok")
+                    StatusColor.Fill = new SolidColorBrush(Colors.GreenYellow);
+                else
+                    StatusColor.Fill = new SolidColorBrush(Colors.Red);
+            } while (!stopStatus);
+        }
+        public string PortStatus()   //функция проверки статуса порта
+        {
+            Thread.Sleep(5000);     //засыпаем на 5с.
+            string status = null;
+            if (port.IsOpen)    //если порт открыт
+            {
+                try
+                {
+                    status = port.ReadLine();   //читаем порт
+                    return status;
+                }
+                catch (Exception ex)
+                {
+                    //##Логирование
+                }
+            }
+            else    //если порт закрыт
+            {
+                status = "close";
+                try
+                {
+                    port.Open();    //если порт закрыт - пытаемся его открыть.
+                }
+                catch (Exception ex)
+                {
+                    //##Сюда логирование можно что не удаётся открыть порт
+                }
+            }
+            return status;
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             if (port != null)
                 if (port.IsOpen) port.Close();   //закрываем порт если открыт при закрытии формы
+            
         }
     }
 }

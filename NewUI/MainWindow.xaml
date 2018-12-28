@@ -20,5 +20,7 @@
         <Button x:Name="btnSettings" Click="btnSettings_Click" Content="Settings" HorizontalAlignment="Left" Margin="410,10,0,0" VerticalAlignment="Top" Width="75"/>
         <TextBox Name="textBox1" Height="220" Width="100" HorizontalAlignment="left" VerticalAlignment="Top" Margin="300,30,0,0"/>
         <Label x:Name="label" Content="Результат:" HorizontalAlignment="Left" Margin="305,0,0,0" VerticalAlignment="Top" Width="100"/>
+        <Ellipse Name="StatusColor" Fill="Gray" HorizontalAlignment="Left" Height="20" Width="20" Margin="450,257,0,0" Stroke="Black" VerticalAlignment="Top"/>
+        <Label x:Name="PortName" Content="Port:" HorizontalAlignment="Left" Margin="407,255,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

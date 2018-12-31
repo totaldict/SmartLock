@@ -220,6 +220,12 @@ namespace NewUI
 
         private async void PortStatusAsync()
         {
+            //##Нашёл баг - фоновая задача статуса порта не завершается при закрытии осн. формы и открытии меню настроек. 
+            //вместо этого попробовать
+            //Thread t = new Thread(new ThreadStart(DoubThread));
+            //t.IsBackground = true;
+            //t.Start();
+
             do              //бесконечный цикл
             {
                 PortName.Content = port.PortName;       //имя порта пишем

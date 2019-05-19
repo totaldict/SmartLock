@@ -19,7 +19,13 @@ namespace SmartLock
             public string pass = "";
             public string bground = "finn.jpg";
             public string kFolder = Environment.CurrentDirectory + @"\TestKey";
-            public string port = "COM1";
+            public string port = "";
+            public int fails = 0;               //количество неудачных попыток    
+            public string mailFrom = "";
+            public string mailPass = "";
+            public string mailSmtp = "";
+            public string mailPort = "";
+            public string mailTo = "";
         }
         //Класс работы с настройками
         public class Props

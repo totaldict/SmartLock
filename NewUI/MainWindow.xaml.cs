@@ -19,6 +19,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using static SmartLock.XMLFileSettings;
 using System.IO.Ports;
 using System.Threading;
+using System.Net.Mail;
+using System.Net;
 
 namespace NewUI
 {
@@ -28,37 +30,52 @@ namespace NewUI
     public partial class MainWindow : Window
     {
         public List<FixedKey> fix;
-        public string dir;//путь сохранения
+        public string dir;//путь сохранения ключей
+        public string sysDir; //системный путь
         private SerialPort port;
         private Props propsOpen = new Props(); //экземпляр класса с настройками 
         bool stopStatus = false;
+        int failsCount;                        //количество неудачных попыток ввода ключа
         public MainWindow()
         {
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
-            LoadSettXMLMainWindow();
-            PortStatusAsync();                      //поддерживает подключение и сообщает статус
-            LogWrite("Запущено окно MainWindow.");  //лог
+            if (LoadSettXMLMainWindow())                //если загружены настройки
+                PortStatusAsync();                      //поддерживает подключение и сообщает статус
+            LogWrite("Запущено окно MainWindow.");      //лог
         }
 
-        public void LoadSettXMLMainWindow()
+        public bool LoadSettXMLMainWindow()
         {
             //узнаём где находимся, проверяем есть ли папка, если нет - создаём
-            dir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\TestKey";
-            System.IO.Directory.CreateDirectory(dir);
-            if (System.IO.File.Exists($@"{dir}\settings.xml"))
+            sysDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\TestKey";
+            System.IO.Directory.CreateDirectory(sysDir);
+            if (System.IO.File.Exists($@"{sysDir}\settings.xml"))
+            {
                 readSetting(); //если есть файл настроек-грузим их.
+                return true;
+            }
+            else
+                return false;
         }
 
         //Чтение настроек из xml-файла
         private void readSetting()
         {
-            propsOpen.ReadXml();
-            string bgimage = propsOpen.Fields.bground;
-            dir = propsOpen.Fields.kFolder;
-            OpenPort(propsOpen.Fields.port);   //открываем порт
-            image.Source = new BitmapImage(new Uri($"{bgimage}"));  //меняем картинку
-            LogWrite($"Прочитаны настройки из XML-файла {propsOpen.Fields.XMLFileName}");//лог
+            try
+            {
+                propsOpen.ReadXml();
+                string bgimage = propsOpen.Fields.bground;
+                dir = propsOpen.Fields.kFolder;
+                failsCount = propsOpen.Fields.fails;
+                OpenPort(propsOpen.Fields.port);   //открываем порт
+                image.Source = new BitmapImage(new Uri($"{bgimage}"));  //меняем картинку
+                LogWrite($"Прочитаны настройки из XML-файла {propsOpen.Fields.XMLFileName}");//лог
+            }
+            catch (Exception ex)
+            {
+                LogWrite("Невозможно прочитать настройки.");
+            }
         }
         private void OpenPort(string portNr)    //открываем порт с заданным номером
         {
@@ -75,7 +92,7 @@ namespace NewUI
         private void LogWrite(string str)   //записывает строку лога
         {
             string logLine = $"{DateTime.Now.ToString()}\t{str}{Environment.NewLine}";
-            File.AppendAllText($@"{dir}\log.txt", logLine); //если файла лога нет, то создаём новый, если есть - дозаписываем в него и закрываем
+            File.AppendAllText($@"{sysDir}\log.txt", logLine); //если файла лога нет, то создаём новый, если есть - дозаписываем в него и закрываем
         }
         private Bitmap MakeBmpFromInkCanvas()   //Получение рисунка от InkCanvas и сохранение его
         {
@@ -99,7 +116,7 @@ namespace NewUI
             FileStream fs = null;
             try
             {   //пытаемся прочитать коллекцию эталонных ключей
-                fs = new System.IO.FileStream($@"{dir}\collection.ini", System.IO.FileMode.Open);
+                fs = new System.IO.FileStream($@"{sysDir}\collection.ini", System.IO.FileMode.Open);
             }
             catch (Exception ex)
             {
@@ -119,6 +136,11 @@ namespace NewUI
         }
         private void btnChkKey_Click(object sender, RoutedEventArgs e)  //проверка ключа
         {
+            if (dir == null)        //если не прочитаны настройки (некуда сохранять ключи) - выходим
+            {
+                System.Windows.MessageBox.Show($"Невозможно сохранить ключи.\nЛибо не читаются настройки, либо указана некорректная дирректория сохранения.");
+                return;
+            }
             bool opened = false;
             textBox1.Text = null;//##окно для вывода % совпадения ключей, потом убрать
             Bitmap bmp = MakeBmpFromInkCanvas();
@@ -135,10 +157,16 @@ namespace NewUI
                 {
                     OpenLock();                                //##Подумать над механизмом разрешения!!!
                     opened = true;
+                    failsCount = 0;                             //обнуляем счётчик неудачных вводов
                 }
                 i++;
             }
             LogWrite($"Произведено сравнение ключа c эталонным.");
+            if (!opened)
+                failsCount++;
+            if (failsCount >= 3)            //если неудачных попыток ввода >=3
+                AlertMail(failsCount);
+
             inkcanvas.Strokes.Clear();  //очищаем поле ввода ключа
         }
         public static bool[,] BmpToMatrix(Bitmap b)
@@ -201,6 +229,7 @@ namespace NewUI
 
         private void btnSettings_Click(object sender, RoutedEventArgs e) //вызов окна авторизации для входа в настройки
         {
+            stopStatus = true;
             AuthWindow authFrm = new AuthWindow();
             authFrm.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             authFrm.Show();
@@ -225,20 +254,27 @@ namespace NewUI
             //Thread t = new Thread(new ThreadStart(DoubThread));
             //t.IsBackground = true;
             //t.Start();
-
-            do              //бесконечный цикл
+            try
             {
-                PortName.Content = port.PortName;       //имя порта пишем
-                string message = await Task.Factory.StartNew(() => PortStatus(), TaskCreationOptions.LongRunning);
-                if (message == "ok")
-                    StatusColor.Fill = new SolidColorBrush(Colors.GreenYellow);
-                else
-                    StatusColor.Fill = new SolidColorBrush(Colors.Red);
-            } while (!stopStatus);
+                do              //бесконечный цикл
+                {
+                    PortName.Content = port.PortName;       //имя порта пишем
+                    string message = await Task.Factory.StartNew(() => PortStatus(), TaskCreationOptions.LongRunning);
+                    if (message == "ok")
+                        StatusColor.Fill = new SolidColorBrush(Colors.GreenYellow);
+                    else
+                        StatusColor.Fill = new SolidColorBrush(Colors.Red);
+                } while (!stopStatus);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Невозможно связаться с замком.\n{ex.Message}");
+                //##Логирование ошибки
+            }
         }
         public string PortStatus()   //функция проверки статуса порта
         {
-            Thread.Sleep(5000);     //засыпаем на 5с.
+            Thread.Sleep(1000);     //засыпаем на 5с.
             string status = null;
             if (port.IsOpen)    //если порт открыт
             {
@@ -269,9 +305,59 @@ namespace NewUI
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            propsOpen.Fields.fails = failsCount;
+            propsOpen.WriteXml();
             if (port != null)
                 if (port.IsOpen) port.Close();   //закрываем порт если открыт при закрытии формы
             
         }
+        //отправляет письмо о неудачных попытках ввода ключа
+        private void AlertMail(int fails)
+        {
+            SendEmailAsync(fails, propsOpen.Fields.mailFrom, 
+                                  propsOpen.Fields.mailPass, 
+                                  propsOpen.Fields.mailSmtp, 
+                                  propsOpen.Fields.mailPort, 
+                                  propsOpen.Fields.mailTo).GetAwaiter();
+        }
+        /// <summary>
+        /// Асинхронная отправка сообщения на почту
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        private static async Task SendEmailAsync(int n, string mailFrom, string mailPass, string mailSmtp, string mailPort, string mailTo)
+        {
+            try
+            {
+                MailAddress from = new MailAddress(mailFrom);
+                MailAddress to = new MailAddress(mailTo);
+                MailMessage m = new MailMessage(from, to);
+                m.Subject = "Введён неверный ключ.";
+                m.Body = $"Выполнено {n} не успешных попыток ввода ключа. {DateTime.Now}";
+                SmtpClient smtp = new SmtpClient(mailSmtp, int.Parse(mailPort));
+                smtp.Credentials = new NetworkCredential(mailFrom, mailPass);
+                smtp.EnableSsl = true;
+                await smtp.SendMailAsync(m);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

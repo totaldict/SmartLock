@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NewUI"
         mc:Ignorable="d"
-        Title="SettingsForm" Height="367" Width="435" Closing="Window_Closing">
+        Title="SettingsForm" Height="428.681" Width="426.776" Closing="Window_Closing">
     <TabControl>
         <TabItem Header="Fixed Key">
             <Grid>
@@ -35,25 +35,37 @@
         </TabItem>
         <TabItem Header="Main settings">
             <Grid>
-                <Button x:Name="SaveSettBtn" Content="Save settings" Click="SaveSettBtn_Click" HorizontalAlignment="Left" Margin="308,266,0,0" VerticalAlignment="Top" Width="87"/>
+                <Button x:Name="SaveSettBtn" Content="Save settings" Click="SaveSettBtn_Click" HorizontalAlignment="Left" Margin="315,340,0,0" VerticalAlignment="Top" Width="87"/>
                 <TextBox x:Name="loginTBox" Grid.Column="2" HorizontalAlignment="Left" Height="23" Margin="63,25,0,0" TextWrapping="Wrap" Text="admin" VerticalAlignment="Top" Width="120"/>
                 <TextBox x:Name="passTBox" HorizontalAlignment="Left" Height="23" Margin="269,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                <TextBox x:Name="bgroundTBox" HorizontalAlignment="Left" Height="23" Margin="10,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="317"/>
-                <TextBox x:Name="kFolderTBox" HorizontalAlignment="Left" Height="23" Margin="10,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="317"/>
+                <TextBox x:Name="bgroundTBox" HorizontalAlignment="Left" Height="23" Margin="10,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="317"/>
+                <TextBox x:Name="kFolderTBox" HorizontalAlignment="Left" Height="23" Margin="10,133,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="317"/>
                 <Label x:Name="label" Content="Access:" Grid.Column="2" HorizontalAlignment="Left" Margin="59,-1,0,0" VerticalAlignment="Top" RenderTransformOrigin="0,0.346"/>
                 <Label x:Name="label1" Content="login:" Grid.Column="2" HorizontalAlignment="Left" Margin="20,23,0,0" VerticalAlignment="Top"/>
                 <Label x:Name="label2" Content="pass:" HorizontalAlignment="Left" Margin="218,23,0,0" VerticalAlignment="Top"/>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="76" Margin="10,4,0,0" VerticalAlignment="Top" Width="392" Opacity="0.3"/>
-                <Label x:Name="label3" Content="Background:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="label4" Content="Key storage folder:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,127,0,0" VerticalAlignment="Top" Width="180"/>
-                <Button x:Name="bgFileDialogBtn" Content="Change" Click="bgBtn_Click" HorizontalAlignment="Left" Margin="342,102,0,0" VerticalAlignment="Top" Width="53" Height="25" RenderTransformOrigin="0.491,0.52"/>
-                <Button x:Name="KeyFolderBtn" Content="Change" Click="KeyFolderBtn_Click" HorizontalAlignment="Left" Margin="342,151,0,0" VerticalAlignment="Top" Width="53"/>
-                <Button x:Name="UpdateCOMBtn" Content="Update" Click="UpdateCOMBtn_Click" HorizontalAlignment="Left" Margin="20,203,0,0" VerticalAlignment="Top" Width="75"/>
-                <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="109,203,0,0" VerticalAlignment="Top" Width="96"/>
-                <Button x:Name="ConnectBtn" Content="Connect" Click="ConnectBtn_Click" HorizontalAlignment="Left" Margin="218,203,0,0" VerticalAlignment="Top" Width="75"/>
-                <Button x:Name="LockOpenBtn" Content="Lock Open" Click="LockOpenBtn_Click" HorizontalAlignment="Left" Margin="320,203,0,0" VerticalAlignment="Top" Width="75"/>
-                <Button x:Name="LockCloseBtn" Content="Lock Close" Click="LockCloseBtn_Click" HorizontalAlignment="Left" Margin="320,230,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.507,0.591"/>
-                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="72" Margin="10,189,0,0" VerticalAlignment="Top" Width="392" Opacity="0.3"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="57" Margin="10,4,0,0" VerticalAlignment="Top" Width="392" Opacity="0.3"/>
+                <Label x:Name="label3" Content="Background:" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label4" Content="Key storage folder:" HorizontalAlignment="Left" Margin="10,109,0,0" VerticalAlignment="Top" Width="180"/>
+                <Button x:Name="bgFileDialogBtn" Content="Change" Click="bgBtn_Click" HorizontalAlignment="Left" Margin="342,84,0,0" VerticalAlignment="Top" Width="53" Height="25" RenderTransformOrigin="0.491,0.52"/>
+                <Button x:Name="KeyFolderBtn" Content="Change" Click="KeyFolderBtn_Click" HorizontalAlignment="Left" Margin="342,133,0,0" VerticalAlignment="Top" Width="53"/>
+                <Button x:Name="UpdateCOMBtn" Content="Update" Click="UpdateCOMBtn_Click" HorizontalAlignment="Left" Margin="20,174,0,0" VerticalAlignment="Top" Width="75"/>
+                <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="109,174,0,0" VerticalAlignment="Top" Width="96"/>
+                <Button x:Name="ConnectBtn" Content="Connect" Click="ConnectBtn_Click" HorizontalAlignment="Left" Margin="218,174,0,0" VerticalAlignment="Top" Width="75"/>
+                <Button x:Name="LockOpenBtn" Content="Lock Open" Click="LockOpenBtn_Click" HorizontalAlignment="Left" Margin="320,174,0,0" VerticalAlignment="Top" Width="75"/>
+                <Button x:Name="LockCloseBtn" Content="Lock Close" Click="LockCloseBtn_Click" HorizontalAlignment="Left" Margin="320,201,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.507,0.591"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="72" Margin="10,160,0,0" VerticalAlignment="Top" Width="392" Opacity="0.3"/>
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="96" Margin="10,239,0,0" VerticalAlignment="Top" Width="392" Opacity="0.3"/>
+                <TextBox x:Name="mFromTbox" HorizontalAlignment="Left" Height="23" Margin="63,260,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="mPassTbox" HorizontalAlignment="Left" Height="23" Margin="63,283,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="smtpTbox" HorizontalAlignment="Left" Height="23" Margin="63,306,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="portTbox" HorizontalAlignment="Left" Height="23" Margin="246,306,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
+                <TextBox x:Name="toTBox" HorizontalAlignment="Left" Height="23" Margin="246,260,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
+                <Label x:Name="label5" Content="Mail settings:" HorizontalAlignment="Left" Margin="48,235,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label6" Content="from:" HorizontalAlignment="Left" Margin="21,256,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label7" Content="pass:" HorizontalAlignment="Left" Margin="21,279,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label8" Content="smtp:" HorizontalAlignment="Left" Margin="21,302,0,0" VerticalAlignment="Top"/>
+                <Label x:Name="label9" Content="port:" HorizontalAlignment="Left" Margin="205,302,0,0" VerticalAlignment="Top" Width="41"/>
+                <Label x:Name="label10" Content="to:" HorizontalAlignment="Left" Margin="211,256,0,0" VerticalAlignment="Top" Width="35"/>
             </Grid>
         </TabItem>
     </TabControl>

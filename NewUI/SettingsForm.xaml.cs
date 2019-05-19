@@ -27,6 +27,7 @@ namespace NewUI
     /// </summary>
     public partial class SettingsForm : Window
     {
+        string sysDir;              //системная директория
         string dir;
         public FixedKey fix;       //пока тут создаём обьект эталонного ключа
         List<FixedKey> coll = new List<FixedKey>();
@@ -44,16 +45,16 @@ namespace NewUI
 
         private void LoadSett() //загрузка настроек в окно настроек при старте
         {
-            dir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\TestKey";
-            System.IO.Directory.CreateDirectory(dir);
-            if (System.IO.File.Exists($@"{dir}\settings.xml"))
+            sysDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\TestKey";
+            System.IO.Directory.CreateDirectory(sysDir);
+            if (System.IO.File.Exists($@"{sysDir}\settings.xml"))
                 readSetting();  //при создании окна читаются настройки из xml-файла, если он существует))
             
         }
         private void LogWrite(string str)   //записывает строку лога
         {
             string logLine = $"{DateTime.Now.ToString()}\t{str}{Environment.NewLine}";
-            File.AppendAllText($@"{dir}\log.txt", logLine); //если файла лога нет, то создаём новый, если есть - дозаписываем в него и закрываем
+            File.AppendAllText($@"{sysDir}\log.txt", logLine); //если файла лога нет, то создаём новый, если есть - дозаписываем в него и закрываем
         }
         private void NewPic()//очистка формы InkCanvas для рисования
         {
@@ -95,12 +96,12 @@ namespace NewUI
         {   //сохраняем эталонный ключ в коллекцию
             fix = new FixedKey(DateTime.Now, arrFilled);
             coll.Add(fix);        //коллекция вводимых эталонных ключей   
-            FileStream fs = new System.IO.FileStream($@"{dir}\collection.ini", System.IO.FileMode.Create);
+            FileStream fs = new System.IO.FileStream($@"{sysDir}\collection.ini", System.IO.FileMode.Create);
             BinaryFormatter bf = new BinaryFormatter();
             for (int i = 0; i < coll.LongCount(); i++)  //коллекцию сериализуем в файл collection.ini
                 bf.Serialize(fs, coll[i]);
             fs.Close();
-            LogWrite($@"Коллекция ключей записана в файл {dir}\collection.ini.");
+            LogWrite($@"Коллекция ключей записана в файл {sysDir}\collection.ini.");
         }
 
         private void ClrKey_Click(object sender, RoutedEventArgs e)
@@ -125,6 +126,11 @@ namespace NewUI
             props.Fields.bground = bgroundTBox.Text;
             props.Fields.kFolder = kFolderTBox.Text;
             props.Fields.port = comboBox.SelectedItem.ToString();
+            props.Fields.mailFrom = mFromTbox.Text;
+            props.Fields.mailPass = mPassTbox.Text;
+            props.Fields.mailSmtp = smtpTbox.Text;
+            props.Fields.mailPort = portTbox.Text;
+            props.Fields.mailTo = toTBox.Text;
             props.WriteXml();
             LogWrite($"Настройки программы записаны в файл {props.Fields.XMLFileName}.");
         }
@@ -136,10 +142,21 @@ namespace NewUI
             passTBox.Text = props.Fields.pass;
             bgroundTBox.Text = props.Fields.bground;
             kFolderTBox.Text = props.Fields.kFolder;
+            mFromTbox.Text = props.Fields.mailFrom;
+            mPassTbox.Text = props.Fields.mailPass;
+            smtpTbox.Text = props.Fields.mailSmtp;
+            portTbox.Text = props.Fields.mailPort;
+            toTBox.Text = props.Fields.mailTo;
             dir = kFolderTBox.Text;         //меняем папку сохранения эталонных ключей
-            comboBox.Items.Add(props.Fields.port);  //добавляем в список порт из файла настроек
-            comboBox.SelectedItem = props.Fields.port;  //делаем выставляем его в значение comboBox
-            image.Source =new BitmapImage(new Uri($"{bgroundTBox.Text}"));  //меняем картинку
+            if (props.Fields.port != "")
+            {
+                comboBox.Items.Add(props.Fields.port);  //добавляем в список порт из файла настроек
+                comboBox.SelectedItem = props.Fields.port;  //делаем выставляем его в значение comboBox
+            }
+            if (props.Fields.bground != "finn.jpg")
+            {
+                image.Source = new BitmapImage(new Uri($"{bgroundTBox.Text}"));  //меняем картинку
+            }
             LogWrite($"Настройки программы прочитаны из файла {props.Fields.XMLFileName}.");
         }
         #endregion
@@ -153,7 +170,7 @@ namespace NewUI
         private void bgBtn_Click(object sender, RoutedEventArgs e)//выбор другой картинки
         {
             Microsoft.Win32.OpenFileDialog myDialog = new Microsoft.Win32.OpenFileDialog();
-            myDialog.Filter = "Картинки(*.JPG;*.GIF)|*.JPG;*.GIF" + "|Все файлы (*.*)|*.* ";
+            myDialog.Filter = "Картинки(*.JPG;*.GIF)|*.JPG;*.GIF" + "|Все файлы (*.*)|*.*";
             myDialog.CheckFileExists = true;
             myDialog.Multiselect = false;
             if (myDialog.ShowDialog() == true)
